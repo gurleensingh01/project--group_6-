@@ -54,7 +54,7 @@ def show_appointments_by_day(appt_list, day):
     None
     '''
     for appointment in appt_list:
-        if day.capitalize() in appointment.get_day_of_week():
+        if day.capitalize() == appointment.get_day_of_week():
             print(appointment.__str__())
 
 
@@ -70,7 +70,7 @@ def save_scheduled_appointments(appt_list):
     The number of scheduled appointments saved
     '''
     nbr_of_saved_appointment = 0
-    file_name = input("Enter a file name: ")
+    file_name = input("Enter appointment filename: ")
     file_path = os.path.join("C:\\temp", file_name)
     file_overwrite = True
     while os.path.exists(file_path) and file_overwrite:
@@ -80,7 +80,7 @@ def save_scheduled_appointments(appt_list):
         if overwrite == "Y":
             file_overwrite = False
         elif overwrite == "N":
-            file_name = input("Enter a file name: ")
+            file_name = input("Enter appointment filename: ")
             file_path = os.path.join("C:\\temp", file_name)
  
     file_name_f = open(file_path, "w")
