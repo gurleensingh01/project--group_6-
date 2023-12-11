@@ -1,93 +1,71 @@
-import os
-import os.path
+class Appointment:
 
-#Finds an appointment by day and start hour
-def find_appointment_by_time(appt_list, day, start_time):
-    '''
-    Finds the appointments that matched input day and start time
+    # Constructor to initialize properties
+    def __init__(self, day_of_week, start_time_hour):
+        self.__client_name = ""
+        self.__client_phone = ""
+        self.__appt_type = 0
+        self.__day_of_week = day_of_week
+        self.__start_time_hour = start_time_hour
 
-    Arguments:
-    Appointment List
-    Day
-    Start
+    # Getter for client name
+    def get_client_name(self):
+        return self.__client_name
+    
+    # Getter for client phone
+    def get_client_phone(self):
+        return self.__client_phone
+    
+    # Getter for appt type
+    def get_appt_type(self):
+        return self.__appt_type
 
-    Returns:
-    Matched appointment
-    '''
-    for appointment in appt_list:
-        if (
-            appointment.get_day_of_week() == day.capitalize()
-            and appointment.get_start_time_hour() == start_time
-        ):
-            return appointment
+    # Getter for day of the week
+    def get_day_of_week(self):
+        return self.__day_of_week
+    
+    # Getter for start time hour
+    def get_start_time_hour(self):
+        return self.__start_time_hour
+    
+    # Getter for appointment type description
+    def get_appt_type_desc(self):
+        appt_type_desc = {0:"Available", 1:"Mens Cut", 2:"Ladies Cut", 3:"Mens Colouring", 4:"Ladies Colouring"}   
+        return appt_type_desc.get(self.__appt_type)   
+    
+    # Getter for end time hour
+    def get_end_time_hour(self):
+        return str(self.__start_time_hour + 1)
+    
+    # Setter for client name
+    def set_client_name(self, new_client_name):
+        self.__client_name = new_client_name
+     
+    # Setter for client phone 
+    def set_client_phone(self, new_client_phone):
+        self.__client_phone = new_client_phone
+    
+    # Setter for appointment type
+    def set_appt_type(self, new_appt_type):
+        self.__appt_type = new_appt_type
+    
+    # Method to schedule appointment
+    def schedule(self, client_name, client_phone, appt_type):
+        self.__client_name = client_name
+        self.__client_phone = client_phone
+        self.__appt_type = appt_type
+    
+    # Method to cancel the appointment
+    def cancel(self):
+        self.__client_name = ""
+        self.__client_phone = ""
+        self.__appt_type = 0
 
+    # Method to format the appointment in csv format
+    def format_record(self):
+        return str(self.__client_name) + "," + str(self.__client_phone) + "," + str(self.__appt_type) + "," + str(self.__day_of_week) + "," + str(self.__start_time_hour).zfill(2)
 
-
-# Displays appointments matching a client name
-def show_appointments_by_name(appt_list, name):
-    '''
-    Finds the appointments that matched input name and display them 
-
-    Argument:
-    Appointment List
-    Customer's name: Allowing for partial and non-case sensitive matches
-
-    Returns:
-    found appointments
-    '''
-    found_appointments = ""
-    for appointment in appt_list:
-        if name.upper() in appointment.get_client_name().upper():
-            found_appointments = appointment.__str__()
-            print(found_appointments)
-    return found_appointments              
-
-# Displays appointments for a specific day
-def show_appointments_by_day(appt_list, day):
-    '''
-    Finds the appointments that matched input day and display them
-
-    Arguments:
-    Appointment List
-    Day
-
-    Returns:
-    None
-    '''
-    for appointment in appt_list:
-        if day.capitalize() == appointment.get_day_of_week():
-            print(appointment.__str__())
-
-
-# Saves scheduled appointments to a file
-def save_scheduled_appointments(appt_list):
-    ''' 
-    Checks the file's existence and writes the scheduled appointments to a csv file 
-
-    Arguments:
-    Appointment List
-
-    Returns:
-    The number of scheduled appointments saved
-    '''
-    nbr_of_saved_appointment = 0
-    file_name = input("Enter appointment filename: ")
-    file_path = os.path.join("C:\\temp", file_name)
-    file_overwrite = True
-    while os.path.exists(file_path) and file_overwrite:
-        overwrite = input("File already exists. Do you want to overwrite it? (Y/N): ").upper()
-        while overwrite not in ("Y", "N"):
-            overwrite = input("Invalid input. Do you want to overwrite it? (Y/N): ").upper()
-        if overwrite == "Y":
-            file_overwrite = False
-        elif overwrite == "N":
-            file_name = input("Enter appointment filename: ")
-            file_path = os.path.join("C:\\temp", file_name)
- 
-    file_name_f = open(file_path, "w")
-    for appointment in appt_list:
-        if 0 != appointment.get_appt_type() and appointment.get_appt_type() in (1,2,3,4):
-            file_name_f.write(appointment.format_record() + "\n")
-            nbr_of_saved_appointment += 1
-    file_name_f.close()  
-    return nbr_of_saved_appointment
+    # Method to format the appoinment as a string
+    def __str__(self): 
+        return "{:20s}{:15s}{:10s}{:10s}{:10s}{:20s}".format(str(self.__client_name),
+        str(self.__client_phone), str(self.__day_of_week), str(self.__start_time_hour).zfill(2) + ":00", str(self.__start_time_hour + 1).zfill(2) + ":00", self.get_appt_type_desc())
