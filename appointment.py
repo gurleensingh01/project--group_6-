@@ -22,6 +22,7 @@ def find_appointment_by_time(appt_list, day, start_time):
             return appointment
 
 
+
 # Displays appointments matching a client name
 def show_appointments_by_name(appt_list, name):
     '''
@@ -88,6 +89,5 @@ def save_scheduled_appointments(appt_list):
         if 0 != appointment.get_appt_type() and appointment.get_appt_type() in (1,2,3,4):
             file_name_f.write(appointment.format_record() + "\n")
             nbr_of_saved_appointment += 1
-    file_name_f.close()
-    print(f"{nbr_of_saved_appointment} scheduled appointments has successfully been saved")    
+    file_name_f.close()  
     return nbr_of_saved_appointment
