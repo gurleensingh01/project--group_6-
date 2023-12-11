@@ -11,7 +11,7 @@
 #    Client name
 #    Client phone
 #    Selections
-
+#
 # Process
 #    Loading previously scheduled appointments
 #    Creating calendar in appointment list
@@ -21,7 +21,7 @@
 #    Printing calendar for a specific day
 #    Cancelling an appointment
 #    Saving the appointments to the file
-
+#
 # Output
 #    Number of preiously loaded appointments
 #    Appointments for a specific name
@@ -30,26 +30,26 @@
 #
 # Authors: Tan Nguyen, Gurleen Singh and Jashanpreet Singh
 # Version: 12-08-2023
-
-
+ 
+ 
 import appointment as ap
 import os
 import os.path
-
+ 
 DASH_37 = "=" * 37
 DASH_85 = "-" * 85
 VALID_SELECTION = ['1', '2', '3', '4', '9']
 VALID_APPOINTMENT_TYPE = [1 , 2, 3, 4]
 WORKING_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
+ 
 #Creates a one-week calendar of available appointments
 def create_weekly_calender(appt_list):
     '''
     Creates an appointment list from Monday to Saturday, from 9 AM to 4 PM
-
+ 
     Arguments:
     None
-
+ 
     Returns:
     The appointment list
     '''
@@ -58,15 +58,15 @@ def create_weekly_calender(appt_list):
             appointment = ap.Appointment(day,hour)
             appt_list.append(appointment)
     print("Weekly calendar created")
-
+ 
 #Loads previously booked appointments into the calendar
 def load_scheduled_appointments(appt_list):
     '''
     Retrieves appointments from the appointments1.csv file and assigns values to the appointment list
-
+ 
     Arguments:
     Appointment list
-
+ 
     Returns:
     The number of scheduled appointments
     '''
@@ -85,22 +85,23 @@ def load_scheduled_appointments(appt_list):
         day = values[3]
         start_time = int(values[4])
         appointments = find_appointment_by_time(appt_list, day, start_time)
-        appointments.schedule(name, phone_number, appt_type)
-        number_of_scheduled_appointments += 1
+        if appointments != None:
+            appointments.schedule(name, phone_number, appt_type)
+            number_of_scheduled_appointments += 1
  
     file.close()
     return number_of_scheduled_appointments
-
+ 
 #Displays the menu of application options
 def print_menu():
     '''
     Prints the menu options and checks the valid input options from users
-
+ 
     Arguments:
     None
-
+ 
     Returns:
-    The selected option 
+    The selected option
     '''
     print("Jojo's Hair Salon Appointment Manager")
     print(DASH_37)
@@ -110,24 +111,24 @@ def print_menu():
     print(" 4) cancel an appointment")
     print(" 9) Exit the system")
     selection = input("Enter your selection: ")
-
+ 
     while selection not in VALID_SELECTION:
         print("Invalid selection! please try again. ")
         selection = input("Enter your selection: ")
-    
+   
     print()
     return int(selection)
-
+ 
 #Finds an appointment by day and start hour
 def find_appointment_by_time(appt_list, day, start_time):
     '''
     Finds the appointments that matched input day and start time
-
+ 
     Arguments:
     Appointment List
     Day
     Start
-
+ 
     Returns:
     Matched appointment
     '''
@@ -137,17 +138,17 @@ def find_appointment_by_time(appt_list, day, start_time):
             and appointment.get_start_time_hour() == start_time
         ):
             return appointment
-
-
+ 
+ 
 # Displays appointments matching a client name
 def show_appointments_by_name(appt_list, name):
     '''
-    Finds the appointments that matched input name and display them 
-
+    Finds the appointments that matched input name and display them
+ 
     Argument:
     Appointment List
     Customer's name: Allowing for partial and non-case sensitive matches
-
+ 
     Returns:
     found appointments
     '''
@@ -157,32 +158,32 @@ def show_appointments_by_name(appt_list, name):
             found_appointments = appointment.__str__()
             print(found_appointments)
     return found_appointments              
-
+ 
 # Displays appointments for a specific day
 def show_appointments_by_day(appt_list, day):
     '''
     Finds the appointments that matched input day and display them
-
+ 
     Arguments:
     Appointment List
     Day
-
+ 
     Returns:
     None
     '''
     for appointment in appt_list:
-        if day.capitalize() in appointment.get_day_of_week():
+        if day.capitalize() == appointment.get_day_of_week():
             print(appointment.__str__())
-
-
+ 
+ 
 # Saves scheduled appointments to a file
 def save_scheduled_appointments(appt_list):
-    ''' 
-    Checks the file's existence and writes the scheduled appointments to a csv file 
-
+    '''
+    Checks the file's existence and writes the scheduled appointments to a csv file
+ 
     Arguments:
     Appointment List
-
+ 
     Returns:
     The number of scheduled appointments saved
     '''
@@ -197,17 +198,17 @@ def save_scheduled_appointments(appt_list):
         if overwrite == "Y":
             file_overwrite = False
         elif overwrite == "N":
-            file_name = input("Enter a different file name: ")
+            file_name = input("Enter appointment filename: ")
             file_path = os.path.join("C:\\temp", file_name)
  
     file_name_f = open(file_path, "w")
     for appointment in appt_list:
-        if 0 != appointment.get_appt_type() and appointment.get_appt_type() in (1,2,3,4):
+        if 0 != appointment.get_appt_type():
             file_name_f.write(appointment.format_record() + "\n")
             nbr_of_saved_appointment += 1
-    file_name_f.close()   
+    file_name_f.close()
     return nbr_of_saved_appointment
-
+ 
 def main():
     '''
     Print the starting message
@@ -353,5 +354,4 @@ def main():
         print("Good Bye!")
  
 if __name__ == "__main__":
-    main()      
-
+    main()
