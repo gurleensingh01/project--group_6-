@@ -205,8 +205,7 @@ def save_scheduled_appointments(appt_list):
         if 0 != appointment.get_appt_type() and appointment.get_appt_type() in (1,2,3,4):
             file_name_f.write(appointment.format_record() + "\n")
             nbr_of_saved_appointment += 1
-    file_name_f.close()
-    print(f"{nbr_of_saved_appointment} scheduled appointments have been sucessfully saved")    
+    file_name_f.close()   
     return nbr_of_saved_appointment
 
 def main():
@@ -219,75 +218,75 @@ def main():
     If the selection is 1, calls the get_day_of_week, get_start_time_hour and get_appt_type to find if the slot is available and use schedule method to schedule the appointment if the slot is available
     If the selection is 2, calls the function show_appointments_by_name() to find the appointments by name
     If the selection is 3, calls the function show_appointments_by_day() to print calendar for the chosen day
-    If the selection is 4, calls the cancel method to cancel the appointment 
+    If the selection is 4, calls the cancel method to cancel the appointment
     If the selection is 9, Exit the system
     Ask the user if they want to save the records in the file
     If yes, calls the function save_scheduled_appointments() to save it in the chosen file by user
     Print the ending message
-
+ 
     '''
     appt_list = []
-    
+   
     print("Starting the Appointment Manager System")
     create_weekly_calender(appt_list)
     load_schedule_appointments_option = input("Would you like to load previously scheduled appointments from a file (Y/N)? ")
-
+ 
     while load_schedule_appointments_option.upper() not in ("Y", "N"):
         load_schedule_appointments_option = input("Would you like to load previously scheduled appointments from a file (Y/N)? ")
-
+ 
     if load_schedule_appointments_option.upper() == "Y":
         loaded_appointments = load_scheduled_appointments(appt_list)
         print(f"{loaded_appointments} previously scheduled appointments have been loaded")
         print()
         print()
-
+ 
     else:
         print()
         print()
-    
+   
     selection = print_menu()
-
+ 
     while selection != 9:
-        
+       
         if selection == 1:
             print("** Schedule an appointment **")
-
+ 
             day = input("What day: ")
             start_hour = int(input("Enter start hour (24 hour clock): "))
-            
+           
             found = False
-            index = 0 
-            
+            index = 0
+           
             while index < len(appt_list) and not found:
                 current_appointment = appt_list[index]
-
+ 
                 if current_appointment.get_day_of_week() == day.capitalize() and current_appointment.get_start_time_hour() == start_hour and current_appointment.get_appt_type() == 0:
                     found = True
                 index += 1  
-
+ 
             if found:
                 client_name = input("Client Name: ")
                 client_phone = input("Client Phone: ")
-
+ 
                 print("Appointment types")
                 print("1: Mens Cut $50, 2: Ladies Cut $80, 3: Mens Colouring $50, 4: Ladies Colouring $120")
-
+ 
                 type_of_appointment = int(input("Type of Appointment: "))
-
+ 
                 if type_of_appointment in VALID_APPOINTMENT_TYPE:
                     current_appointment.schedule(client_name.capitalize(), client_phone, type_of_appointment)
                     print(f"Ok, {client_name.capitalize()}'s appointment is scheduled!")
-
+ 
                 else:
                     print("Sorry that is not a valid appointment type!")
-            
-            
+           
+           
             elif day.capitalize() not in WORKING_DAYS or start_hour not in range(9, 17):
-                print("Sorry that time slot is not in the weekly calendar")     
-
+                print("Sorry that time slot is not in the weekly calendar")    
+ 
             else:
                 print("Sorry that time slot is booked already!")        
-        
+       
         elif selection == 2:
             print('** Find appointment by name **')
             client_name = input("Enter Client Name: ")
@@ -295,12 +294,12 @@ def main():
             print()
             print("{:20s}{:15s}{:10s}{:10s}{:10s}{:20s}".format("Client Name", "Phone", "Day", "Start", "End", "Type"))
             print(DASH_85)
-            
+           
             found_appointments = show_appointments_by_name(appt_list, client_name)
-
+ 
             if found_appointments == "":
                 print("No appointments found.")
-
+ 
         elif selection == 3:
             print('** Print calendar for a specific day **')
             day = input("Enter the day of week: ")
@@ -308,49 +307,51 @@ def main():
             print()
             print("{:20s}{:15s}{:10s}{:10s}{:10s}{:20s}".format("Client Name", "Phone", "Day", "Start", "End", "Type"))
             print(DASH_85)
-
+ 
             show_appointments_by_day(appt_list, day)
-
+ 
         else:
             print('** Cancel an appointment **')
             day = input("What day: ")
             start_hour = int(input("Enter start hour (24 hour clock): "))
-
+ 
             found = False
             index = 0
             while index < len(appt_list) and not found:
                 current_appointment = appt_list[index]
-
+ 
                 if current_appointment.get_day_of_week() == day.capitalize() and current_appointment.get_start_time_hour() == start_hour and current_appointment.get_appt_type() != 0:
                     found = True
                 index += 1    
             if found:
                 print("Appointment: {} {} - {} for {} has been cancelled!".format(current_appointment.get_day_of_week(), str(current_appointment.get_start_time_hour()).zfill(2) + ":00", str(current_appointment.get_end_time_hour()).zfill(2) + ":00", current_appointment.get_client_name()))
                 current_appointment.cancel()
-
+ 
             elif day.capitalize() not in WORKING_DAYS or start_hour not in range(9, 17):
-                print("Sorry that time slot is not in the weekly calendar")     
-
+                print("Sorry that time slot is not in the weekly calendar")    
+ 
             else:
                 print("That time slot isn't booked and doesn't need to be cancelled")
-
+ 
         print()
-        selection = print_menu()   
-    
+        selection = print_menu()  
+   
     print("** Exit the system **")
     save_option = input("Would you like to save all scheduled appointments to a file (Y/N)? ")
-
+ 
     while save_option.upper() not in ('Y', 'N'):
         print("Invalid Option! please try again")
         save_option = input("Would you like to save all scheduled appointments to a file (Y/N)? ")
-
+ 
     if save_option.upper() == 'Y':
-        save_scheduled_appointments(appt_list)
+        number_of_saved_appointments = save_scheduled_appointments(appt_list)
+        print(f"{number_of_saved_appointments} scheduled appointments have been successfully saved")    
+ 
         print("Good Bye!")
-
+ 
     else:
         print("Good Bye!")
-
+ 
 if __name__ == "__main__":
     main()      
 
