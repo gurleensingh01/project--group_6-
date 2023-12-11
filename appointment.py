@@ -22,6 +22,7 @@ def find_appointment_by_time(appt_list, day, start_time):
             return appointment
 
 
+
 # Displays appointments matching a client name
 def show_appointments_by_name(appt_list, name):
     '''
